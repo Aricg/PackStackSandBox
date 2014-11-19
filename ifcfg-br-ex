@@ -1,0 +1,9 @@
+DEVICE=br-ex
+DEVICETYPE=ovs
+TYPE=OVSBridge
+BOOTPROTO=static
+IPADDR=192.168.1.93    # your IP on the external network, may be any.
+NETMASK=255.255.255.0  # your netmask
+GATEWAY=192.168.1.1   # your gateway
+DNS1=8.8.8.8     # your nameserver
+ONBOOT=yes

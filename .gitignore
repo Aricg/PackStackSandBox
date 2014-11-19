@@ -1,2 +1,2 @@
-default_key.pem  
-keystonerc_admin
+default_key*
+keystonerc*

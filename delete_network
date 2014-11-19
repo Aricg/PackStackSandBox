@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#Must be run on Network node due to ip netns portion
+source /vagrant/keystonerc_admin 
+
+neutron router-list
+routerid=$(neutron router-list | grep demo-router | awk '{print $2}')
+neutron router-gateway-clear $routerid
+neutron router-port-list $routerid
+subnetid=$(neutron router-port-list $routerid | grep subnet_id | awk -F'"' '{print $4}')
+neutron router-interface-delete $routerid  $subnetid
+neutron router-delete $routerid
+for x in $(ip netns); do ip netns del $x; done
+echo "delete these my hand with neutron net-delete <id> "
+neutron net-list
+

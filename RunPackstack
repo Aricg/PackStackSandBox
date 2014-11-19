@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -x
+yum install -y http://rdo.fedorapeople.org/rdo-release.rpm
+yum install -y openstack-packstack expect 
+
+#ha, this doesnt really work. but is harmless, if you are promted for a root password its "vagrant"
+expect << EOF
+set timeout -1
+spawn "/usr/bin/packstack" "--answer-file=/vagrant/ans.txt"  
+expect "root@192.168.1.*'s password:"
+send "vagrant\nvagrant\n"
+expect eof
+EOF
+ssh root@192.168.1.93 '/vagrant/switch_to_qemu.sh'
+cp /root/keystonerc_admin /vagrant
+

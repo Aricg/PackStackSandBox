@@ -1,0 +1,15 @@
+neutron net-create ext-net --shared --router:external=True
+sleep 1
+neutron subnet-create ext-net --name ext-subnet \
+  --allocation-pool start=192.168.1.11,end=192.168.1.21 \
+  --disable-dhcp --gateway 192.168.1.1 192.168.1.0/24
+neutron net-create demo-net
+neutron subnet-create demo-net --name demo-subnet --dns-nameserver 8.8.8.8 --gateway 10.0.0.1 10.0.0.0/24
+neutron router-create demo-router
+neutron router-interface-add demo-router demo-subnet
+neutron router-gateway-set demo-router ext-net
+neutron net-list
+neutron subnet-list
+neutron security-group-rule-create --protocol icmp default
+neutron security-group-rule-create --protocol tcp \
+  --port-range-min 22 --port-range-max 22 default

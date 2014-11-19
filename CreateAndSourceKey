@@ -1,0 +1,4 @@
+nova keypair-add default_key > /home/vagrant/default_key.pem
+eval $(ssh-agent)
+ssh-add /vagrant/default_key.pem
+source /root/keystonerc_admin
