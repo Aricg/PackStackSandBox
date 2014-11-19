@@ -24,7 +24,7 @@ Get this repo
 
     git clone git@github.com:Aricg/PackStackSandBox.git && cd PackStackSandBox
 
-Modify Vagrantfile.yml to reflect the name on your bridge and the ips you want to give the virtualbox instnaces 
+Modify Vagrantfile.yml to reflect the name of your bridge and the ips you want to give the virtualbox instnaces 
 
     bridge: docker0
     controller:
@@ -46,4 +46,5 @@ run packstack
 
     cd /vagrant && ./RunPackstack
 
-I wont include any of the Networking or Launching images in this readme, you can refer to the README.questionable where I have some scripts that bring up and tear down networking
+I wont include any of the Networking or Launching images in this readme, you can refer to the README.questionable where I have some scripts that bring up and tear down networking  as well as add and launch a minimal VM.
+The VM has network connectivity out, but I cant route to it from anywhere. I'm probably doing everything wrong, so feel free to step in and help me out. (pull request welcome :)
