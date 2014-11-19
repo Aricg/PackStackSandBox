@@ -10,7 +10,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
  
 # Begin controller
 config.vm.define "controller" do |controller|
-controller.vm.hostname = "controller"
+  controller.vm.hostname = "controller"
   controller.vm.box_url = "https://build.opnfv.org/downloads/controller.box"
 
     controller.vm.provider "virtualbox" do |v|
