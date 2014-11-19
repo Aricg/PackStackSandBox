@@ -1,42 +1,14 @@
 This is just a jumble of notes right now!! :D
 
-Before you start:
-On your workstation, get vagrant and then
-vagrant plugin install vagrant-vbguest
-
-Before you run vagrant up. 
-
-Edit Vagrantfile to reflect your networking settings, each node must have a public_network and private_network set
-
-public_network should be an ip in your bridge's range. (My gateway is 192.168.1.1/24)
-private_network can be whatever you want (Mine is set within 192.168.22.0/24)
-set the bridge to the correct interface (if you just remove this part Vagrant will prompt you) bridge => "docker0"
-
-Next edit the ans.txt file (I'm not using the private_network in this example, but I will eventually)
-
-192.168.1.91 is my controller VM and 192.168.1.93 is my Storage Network and Compute VM (it should be easy to switch these around)
-
-./ans.txt:CONFIG_CONTROLLER_HOST=192.168.1.91
-./ans.txt:CONFIG_COMPUTE_HOSTS=192.168.1.93
-./ans.txt:CONFIG_NETWORK_HOSTS=192.168.1.93
-./ans.txt:CONFIG_STORAGE_HOST=192.168.1.93
-./ans.txt:CONFIG_AMQP_HOST=192.168.1.91
-./ans.txt:CONFIG_MARIADB_HOST=192.168.1.91
-./ans.txt:CONFIG_MONGODB_HOST=192.168.1.91
-
-Start the machines and ssh into the controller node.
-$ Vagrant up
-$ ssh root@192.168.1.91 (password is vagrant)
-[root@controller ]$ cd /vagrant && ./RunPackstack 
-
+If you follwed the README.md you are on the controller node. 
 Now we need to setup networking and an image we can boot
 
 [root@controller ]$ nova keypair-add default_key > /home/vagrant/default_key.pem
 [root@controller ]$ eval $(ssh-agent)
 [root@controller ]$ ssh-add /vagrant/default_key.pem
 [root@controller ]$ source /root/keystonerc_admin
-[root@controller vagrant(keystone_admin)]# ./setup-neutron
-(if something goes wring here, you can tear down networking with ./delete_network)
+[root@controller vagrant(keystone_admin)]# ./setup-neutron #you should look at this file first. its probably all wrong
+(if something goes wrong here, you can tear down networking with ./delete_network)
 
 For outgoing traffic to work from a spawned vm, I needed to configure br-ex on the Network node
 (example configs are ifcfg-eth1-compute and ifcfg-br-ex   in /vagrant)
@@ -44,8 +16,6 @@ and change the default route on the Network node (hostname compute) (something l
 
 [root@compute vagrant]# ip route del default
 [root@compute vagrant]# ip route add default via 192.168.1.1
-
-(okay so further work will be to remove most of these setps ;)
 
 Get a minimal machine to boot
 [root@controller vagrant(keystone_admin)]# glance image-create \

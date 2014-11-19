@@ -1,8 +1,7 @@
 PackStackSandBox
 ================
 
-Nothing about this is good yet. You have been warned.
-Currently have it running in 6GB of memory. 
+A template for further sanbox work with packstack, brings up two nodes. One controller and One Compute/Netowrking. Should be easy to modify to meet your needs. 
 
 Requirements
 ============
