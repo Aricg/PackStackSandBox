@@ -24,8 +24,9 @@ Get this repo
 
     git clone git@github.com:Aricg/PackStackSandBox.git && cd PackStackSandBox
 
-Modify Vagrantfile.yml 
+Modify Vagrantfile.yml to reflect the name on your bridge and the ips you want to give the virtualbox instnaces 
 
+    bridge: docker0
     controller:
       bridged_ip: 192.168.1.91
       private_ip: 192.168.22.92
