@@ -3,6 +3,7 @@
 #
 require 'yaml'
 settings = YAML.load_file 'Vagrantfile.yml'
+bridge = settings['bridge']
 controller_bridged_ip = settings['controller']['bridged_ip']
 controller_private_ip = settings['controller']['private_ip']
 compute_bridged_ip = settings['compute']['bridged_ip']
@@ -29,7 +30,7 @@ config.vm.define "controller" do |controller|
 
     end
 
-    controller.vm.network "public_network", :bridge => "docker0", ip: controller_bridged_ip, :auto_config => "true", :netmask => "255.255.255.0"
+    controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "true", :netmask => "255.255.255.0"
     controller.vm.network "private_network", ip: controller_private_ip
 
   #Example skeleton for using the puppet provider
