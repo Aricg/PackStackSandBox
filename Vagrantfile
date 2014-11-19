@@ -1,6 +1,12 @@
 # -*- mode: ruby -*-
-
 # vi: set ft=ruby :
+#
+require 'yaml'
+settings = YAML.load_file 'Vagrantfile.yml'
+controller_bridged_ip = settings['controller']['bridged_ip']
+controller_private_ip = settings['controller']['private_ip']
+compute_bridged_ip = settings['compute']['bridged_ip']
+compute_private_ip = settings['compute']['private_ip']
  
 VAGRANTFILE_API_VERSION = "2"
  
@@ -15,13 +21,13 @@ config.vm.define "controller" do |controller|
 
     controller.vm.provider "virtualbox" do |v|
 
-      v.customize ["modifyvm", :id, "--cpus", 2]
+      v.customize ["modifyvm", :id, "--cpus", 1]
       v.customize ["modifyvm", :id, "--memory", 4096]
 
     end
 
-    controller.vm.network "public_network", :bridge => "docker0", ip:"192.168.1.91", :auto_config => "true", :netmask => "255.255.255.0"
-    controller.vm.network "private_network", ip: "192.168.22.92"
+    controller.vm.network "public_network", :bridge => "docker0", ip: controller_bridged_ip, :auto_config => "true", :netmask => "255.255.255.0"
+    controller.vm.network "private_network", ip: controller_private_ip
 
   #Example skeleton for using the puppet provider
   config.vm.provision "puppet" do |puppet|
@@ -47,13 +53,13 @@ config.vm.define "compute" do |compute|
  
     compute.vm.provider "virtualbox" do |v|
 
-      v.customize ["modifyvm", :id, "--cpus", 2]
+      v.customize ["modifyvm", :id, "--cpus", 1]
       v.customize ["modifyvm", :id, "--memory", 2096]
       
     end
 
-    compute.vm.network "public_network", :bridge => "docker0", ip:"192.168.1.93", :auto_config => "true", :netmask => "255.255.255.0"
-    compute.vm.network "private_network", ip: "192.168.22.94"
+    compute.vm.network "public_network", :bridge => "docker0", ip: compute_bridged_ip, :auto_config => "true", :netmask => "255.255.255.0"
+    compute.vm.network "private_network", ip: compute_private_ip
 
   #Example skeleton for using the puppet provider
   config.vm.provision "puppet" do |puppet|
