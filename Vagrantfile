@@ -5,11 +5,11 @@
 VAGRANTFILE_API_VERSION = "2"
  
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "Centos7"
 
  
 # Begin controller
 config.vm.define "controller" do |controller|
+  controller.vm.box = "controller"
   controller.vm.hostname = "controller"
   controller.vm.box_url = "https://build.opnfv.org/downloads/controller.box"
 
@@ -41,6 +41,7 @@ end
  
   # Begin compute
 config.vm.define "compute" do |compute|
+  compute.vm.box = "compute"
   compute.vm.hostname = "compute"
   compute.vm.box_url = "https://build.opnfv.org/downloads/compute.box"
  
