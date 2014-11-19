@@ -1,3 +1,7 @@
+#!/bin/bash
+set -x
+set -e
+ 
 neutron net-create ext-net --shared --router:external=True
 sleep 1
 neutron subnet-create ext-net --name ext-subnet \
@@ -8,8 +12,8 @@ neutron subnet-create demo-net --name demo-subnet --dns-nameserver 8.8.8.8 --gat
 neutron router-create demo-router
 neutron router-interface-add demo-router demo-subnet
 neutron router-gateway-set demo-router ext-net
-neutron net-list
-neutron subnet-list
 neutron security-group-rule-create --protocol icmp default
 neutron security-group-rule-create --protocol tcp \
   --port-range-min 22 --port-range-max 22 default
+neutron net-list
+neutron subnet-list
