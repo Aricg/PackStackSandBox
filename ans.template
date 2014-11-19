@@ -70,15 +70,15 @@ CONFIG_DEBUG_MODE=n
 
 # The IP address of the server on which to install OpenStack services
 # specific to controller role such as API servers, Horizon, etc.
-CONFIG_CONTROLLER_HOST=192.168.1.91
+CONFIG_CONTROLLER_HOST=$controller_bridged_ip
 
 # The list of IP addresses of the server on which to install the Nova
 # compute service
-CONFIG_COMPUTE_HOSTS=192.168.1.93
+CONFIG_COMPUTE_HOSTS=$compute_bridged_ip
 
 # The list of IP addresses of the server on which to install the
 # network service such as Nova network or Neutron
-CONFIG_NETWORK_HOSTS=192.168.1.93
+CONFIG_NETWORK_HOSTS=$compute_bridged_ip
 
 # Set to 'y' if you want to use VMware vCenter as hypervisor and
 # storage. Otherwise set to 'n'.
@@ -104,7 +104,7 @@ CONFIG_VCENTER_CLUSTER_NAME=
 # (Unsupported!) The IP address of the server on which to install
 # OpenStack services specific to storage servers such as Glance and
 # Cinder.
-CONFIG_STORAGE_HOST=192.168.1.93
+CONFIG_STORAGE_HOST=$compute_bridged_ip
 
 # To subscribe each server to EPEL enter "y"
 CONFIG_USE_EPEL=y
@@ -176,7 +176,7 @@ CONFIG_SATELLITE_PROXY_PW=
 CONFIG_AMQP_BACKEND=rabbitmq
 
 # The IP address of the server on which to install the AMQP service
-CONFIG_AMQP_HOST=192.168.1.91
+CONFIG_AMQP_HOST=$controller_bridged_ip
 
 # Enable SSL for the AMQP service
 CONFIG_AMQP_ENABLE_SSL=n
@@ -209,7 +209,7 @@ CONFIG_AMQP_AUTH_PASSWORD=PW_PLACEHOLDER
 
 # The IP address of the server on which to install MariaDB or IP
 # address of DB server to use if MariaDB installation was not selected
-CONFIG_MARIADB_HOST=192.168.1.91
+CONFIG_MARIADB_HOST=$controller_bridged_ip
 
 # Username for the MariaDB admin user
 CONFIG_MARIADB_USER=root
@@ -667,7 +667,7 @@ CONFIG_CEILOMETER_SECRET=052aa4705a464c21
 CONFIG_CEILOMETER_KS_PW=f1ace90161d841cc
 
 # The IP address of the server on which to install MongoDB
-CONFIG_MONGODB_HOST=192.168.1.91
+CONFIG_MONGODB_HOST=$controller_bridged_ip
 
 # The password of the nagiosadmin user on the Nagios server
 CONFIG_NAGIOS_PW=cec8f6a844534733

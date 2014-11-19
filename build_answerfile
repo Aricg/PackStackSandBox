@@ -1,0 +1,8 @@
+#!/bin/bash
+
+eval $(./parse_yaml Vagrantfile.yml)
+
+eval "cat <<EOF
+$(<ans.template)
+EOF
+" 2> /dev/null > ans.txt

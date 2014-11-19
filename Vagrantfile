@@ -7,6 +7,9 @@ controller_bridged_ip = settings['controller']['bridged_ip']
 controller_private_ip = settings['controller']['private_ip']
 compute_bridged_ip = settings['compute']['bridged_ip']
 compute_private_ip = settings['compute']['private_ip']
+
+#
+system('./build_answerfile')
  
 VAGRANTFILE_API_VERSION = "2"
  
