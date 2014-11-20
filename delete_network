@@ -1,25 +1,32 @@
 #!/bin/bash
+set -v 
 if [[ $HOSTNAME != "compute" ]]; then
-echo "Must be run on network node"
-
-exit 1
+  echo "Must be run on network node"
+  exit 1
 fi 
 
 #Must be run on Network node due to ip netns portion
 source /vagrant/keystonerc_admin 
 
-routerid=$(neutron router-list | grep demo-router | awk '{print $2}')
-neutron router-gateway-clear $routerid
-neutron router-port-list $routerid
+for routerid in $(neutron router-list | grep [0-9] | awk '{print $2}'); do
+	neutron router-gateway-clear $routerid
+
 subnetid=$(neutron router-port-list $routerid | grep subnet_id | awk -F'"' '{print $4}')
-neutron router-interface-delete $routerid  $subnetid
-neutron router-delete $routerid
-for x in $(ip netns); do ip netns del $x; done
+	neutron router-interface-delete $routerid  $subnetid
+
+	neutron router-delete $routerid
+done
+
+for x in $(ip netns); do 
+ip netns del $x
+done
 
 for x in $(neutron net-list | grep [0-9] | awk '{print $2}'); do 
-neutron net-delete $x;
+	neutron net-delete $x;
 done
 
 neutron net-list
 neutron router-list
+
+#might want to nova floating-ip-delete  
 
