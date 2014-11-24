@@ -61,6 +61,7 @@ Networking
 ==========
 This part is not done, insofar as I have hard coded ips below. I will integrate this into Vagrantfile.yml shortly. 
 vagrant ssh into the networking (compute node)
+
     cd /vagrant
     ./switch_to_qemu.sh
     ./setup-neutron
