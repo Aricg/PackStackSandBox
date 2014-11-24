@@ -43,7 +43,34 @@ ssh into the vagrant controller (password is vagrant)
 
 run packstack
 
+    ip route del default && ip route add default via 192.168.0.1
     cd /vagrant && ./RunPackstack
+    #Gar, the default route gets deleted when br-ex comes up during the packstack install, run it again untill I figure out a workaround
+    ./RunPackstack
+    cp /root/keystonerc_admin /vagrant
 
-I wont include any of the Networking or Launching images in this readme, you can refer to the README.questionable where I have some scripts that bring up and tear down networking  as well as add and launch a minimal VM.
-The VM has network connectivity out, but I cant route to it from anywhere. I'm probably doing everything wrong, so feel free to step in and help me out. (pull request welcome :)
+Networking
+==========
+This part is not done, insofar as I have hard coded ips below. I will integrate this into Vagrantfile.yml shortly. 
+vagrant ssh into the networking (compute node)
+    cd /vagrant
+    ./switch_to_qemu.sh
+    ./setup-neutron
+    ./CreateAndSourceKey
+    ./GetCirrosMinimalImage
+    ./LaunchCirrosVM cirros
+    route add -net 192.168.3.0 netmask 255.255.255.0 gw 192.168.3.1
+    echo "GATEWAYDEV=br-ex" >> /etc/sysconfig/network
+    echo "GATEWAY=192.168.0.1" >> /etc/sysconfig/network-scripts/ifcfg-br-ex
+
+Trouble-shooting
+================
+When restarting netwoking, the neutron switch become unresponsive
+
+    service network restart
+    for i in dhcp-agent l3-agent metadata-agent openvswitch-agent; \
+    do service neutron-$i restart; done
+    neutron agent-list
+    #takes me 38 seconds before I can ping a the router
+
+
