@@ -546,7 +546,7 @@ CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=
 
 # A comma separated list of colon-separated OVS bridge:interface
 # pairs. The interface will be added to the associated bridge.
-CONFIG_NEUTRON_OVS_BRIDGE_IFACES=
+CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-ex:eth1
 
 # A comma separated list of tunnel ranges for the Neutron openvswitch
 # plugin (eg. 1:1000)
