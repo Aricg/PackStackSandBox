@@ -4,6 +4,8 @@
 require 'yaml'
 settings = YAML.load_file 'Vagrantfile.yml'
 bridge = settings['bridge']
+netmask = settings['netmask']
+gateway = settings['gateway']
 controller_bridged_ip = settings['controller']['bridged_ip']
 controller_private_ip = settings['controller']['private_ip']
 compute_bridged_ip = settings['compute']['bridged_ip']
@@ -30,11 +32,11 @@ config.vm.define "controller" do |controller|
 
     end
 
-    controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "true", :netmask => "255.255.252.0"
+    controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "true", :netmask => netmask
     controller.vm.network "private_network", ip: controller_private_ip
 
   #Example skeleton for using the puppet provider
-  config.vm.provision "puppet" do |puppet|
+  controller.vm.provision "puppet" do |puppet|
       puppet.options = "--verbose"
       #Example for facter facts
       puppet.facter = {
@@ -44,7 +46,8 @@ config.vm.define "controller" do |controller|
       puppet.hiera_config_path = "hiera.yaml"
   end
 
-  config.vm.provision "shell", path: "prepare.sh"
+  controller.vm.provision :shell, :path => "prepare.sh", :args => gateway
+  #config.vm.provision "shell", path: "prepare.sh"
 
 end
   # End controller
@@ -62,11 +65,11 @@ config.vm.define "compute" do |compute|
       
     end
 
-    compute.vm.network "public_network", :bridge => "docker0", ip: compute_bridged_ip, :auto_config => "true", :netmask => "255.255.255.0"
+    compute.vm.network "public_network", :bridge => bridge, ip: compute_bridged_ip, :auto_config => "true", :netmask => netmask
     compute.vm.network "private_network", ip: compute_private_ip
 
   #Example skeleton for using the puppet provider
-  config.vm.provision "puppet" do |puppet|
+  compute.vm.provision "puppet" do |puppet|
       puppet.options = "--verbose"
       #Example for facter facts
       puppet.facter = {
@@ -76,7 +79,7 @@ config.vm.define "compute" do |compute|
       puppet.hiera_config_path = "hiera.yaml"
   end
 
-  config.vm.provision "shell", path: "prepare.sh"
+  compute.vm.provision :shell, :path => "prepare.sh", :args => gateway
 
 end
  

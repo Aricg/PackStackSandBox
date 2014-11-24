@@ -1,4 +1,6 @@
 bridge: docker0
+netmask: 255.255.252.0
+gateway: 192.168.0.1
 
 controller:
   bridged_ip: 192.168.1.91
