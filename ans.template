@@ -433,7 +433,7 @@ CONFIG_NOVA_NETWORK_PRIVIF=eth2
 
 # Name of the default floating pool to which the specified floating
 # ranges are added to
-CONFIG_NOVA_NETWORK_DEFAULTFLOATINGPOOL=nova
+CONFIG_NOVA_NETWORK_DEFAULTFLOATINGPOOL=
 
 # Automatically assign a floating IP to new instances
 CONFIG_NOVA_NETWORK_AUTOASSIGNFLOATINGIP=n
@@ -550,12 +550,12 @@ CONFIG_NEUTRON_OVS_BRIDGE_IFACES=
 
 # A comma separated list of tunnel ranges for the Neutron openvswitch
 # plugin (eg. 1:1000)
-CONFIG_NEUTRON_OVS_TUNNEL_RANGES=1000:1500
+CONFIG_NEUTRON_OVS_TUNNEL_RANGES=1:1000
 
 # The interface for the OVS tunnel. Packstack will override the IP
 # address used for tunnels on this hypervisor to the IP found on the
 # specified interface. (eg. eth1)
-CONFIG_NEUTRON_OVS_TUNNEL_IF=eth1
+CONFIG_NEUTRON_OVS_TUNNEL_IF=eth2
 
 # VXLAN UDP port
 CONFIG_NEUTRON_OVS_VXLAN_UDP_PORT=4789

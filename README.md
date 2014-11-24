@@ -3,6 +3,10 @@ PackStackSandBox
 
 A template for further sanbox work with packstack, brings up two nodes. One controller and One Compute/Netowrking. Should be easy to modify to meet your needs. 
 
+they can be reached after vagrant up with
+    vagrant ssh controller
+    vagrant ssh compute 
+
 Requirements
 ============
 Get VirtualBox https://www.virtualbox.org/wiki/Downloads
@@ -39,14 +43,18 @@ Launch Vagrant
 
 ssh into the vagrant controller (password is vagrant)
 
-    eval $(./parse_yaml Vagrantfile.yml) && ssh root@$controller_bridged_ip
+    #eval $(./parse_yaml Vagrantfile.yml) && ssh root@$controller_bridged_ip
+    vagrant ssh controller
 
 run packstack
 
+The default route gets deleted when br-ex comes up, the installer fails. in the steps below I've readded the route and run packstack again. this is a temporary workaround
+
     ip route del default && ip route add default via 192.168.0.1
     cd /vagrant && ./RunPackstack
-    #Gar, the default route gets deleted when br-ex comes up during the packstack install, run it again untill I figure out a workaround
-    ./RunPackstack
+    packstack  --answer-file=ans.txt
+    ip route add default via 192.168.0.1
+    packstack  --answer-file=ans.txt
     cp /root/keystonerc_admin /vagrant
 
 Networking
