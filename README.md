@@ -49,7 +49,8 @@ ssh into the vagrant controller (password is vagrant)
 run packstack
 
 The default route gets deleted when br-ex comes up, the installer fails. in the steps below I've readded the route and run packstack again. this is a temporary workaround
-
+    
+    cd /vagrant
     packstack  --answer-file=ans.txt
     ip route add default via 192.168.0.1
     packstack  --answer-file=ans.txt
