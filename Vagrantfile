@@ -30,7 +30,7 @@ config.vm.define "controller" do |controller|
 
     end
 
-    controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "true", :netmask => "255.255.255.0"
+    controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "true", :netmask => "255.255.252.0"
     controller.vm.network "private_network", ip: controller_private_ip
 
   #Example skeleton for using the puppet provider

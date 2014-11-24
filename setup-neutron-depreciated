@@ -1,12 +1,34 @@
+#!/bin/bash
 
-neutron net-create external --router:external=True
-neutron subnet-create --disable-dhcp external 192.168.1.0/24
-nova flavor-create m1.nano auto 128 1 1
-neutron net-create net0
-neutron subnet-create --name net0-subnet0 --dns-nameserver 8.8.8.8 net0 10.0.0.0/24
-neutron router-create extrouter
-neutron router-gateway-set extrouter external
-neutron router-interface-add extrouter net0-subnet0
+set -v
+
+#Creating a subnet
+#Create router and network, assign a subnet and add router to the subnet
+
+neutron router-create router1
+neutron net-create internal_network1
+neutron subnet-create internal_network1 172.17.0.0/24 --name subinternal_network1
+neutron router-interface-add router1 subinternal_network1
+
+
+#Attach to a public subnet (to my home router (it will handle dhcp)
+neutron net-create external_network1 --router:external=True
+
+neutron subnet-create external_network1 192.168.1.0/24 \
+  --name subexternal_network1 --enable_dhcp=False \
+  --allocation-pool start=192.168.1.32,end=192.168.1.64 --gateway=192.168.1.1
+
+neutron router-gateway-set router1 external_network1
+
+#https://ask.openstack.org/en/question/9592/disabling-security-groups-in-horizon/
 neutron security-group-rule-create --protocol icmp default
 neutron security-group-rule-create --protocol tcp --port-range-min 22 --port-range-max 22 default
-nova net-list
+nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
+nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
+
+#list created networks
+
+neutron net-list  | grep [a-z] | awk '{print $4,$7}' | grep -v name
+nova secgroup-list-rules default
+neutron router-show router1
+

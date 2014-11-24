@@ -60,6 +60,10 @@ So there are some things to fix :D
 
 
 Caveats: 
+
+If you suspend, resuming breaks eth0, you need to ssh to the bridged ip and ifdown ifup eth0
+
+
 virtualbox does not support nested VT https://www.virtualbox.org/ticket/4032 
 on compute node(s) you must run /vagrant/switch_to_qemu.sh after running packstack (this is hooked in the script RunPackstack so it should just work)
 
@@ -95,3 +99,176 @@ vagrant package --base Alpha_compute_1416326892789_4367 --output ~/lf/Vagrants/c
 Links:
 https://github.com/raphapr/rdo-packstack-installation
 http://jackkozik.com/
+
+Nested bridge? Natted Bridge?
+Try allinone and see how far I can get on networking there.
+Branch repo with 1 2 3 and 4 vm versions.
+
+Router -> Hyperion -> Bridge -> Compute -> (Bridge?) -> VM external -> VM Internal
+Look at VLANS in the answ.txt
+
+This must be wrong:
+417 CONFIG_NOVA_COMPUTE_PRIVIF=eth2
+418
+419 # Nova network manager
+420 CONFIG_NOVA_NETWORK_MANAGER=nova.network.manager.FlatDHCPManager
+421
+422 # Public interface on the Nova network server
+423 CONFIG_NOVA_NETWORK_PUBIF=eth1
+424
+425 # Private interface for network manager on the Nova network server
+426 CONFIG_NOVA_NETWORK_PRIVIF=eth2
+
+Looks like this guy is doing something simmilar to me:
+https://lists.launchpad.net/openstack/msg23180.html
+
+
+ovs-vsctl del-port br-ex eth2
+
+[root@controller network-scripts(keystone_admin)]# cat ifcfg-br-ex
+DEVICE=br-ex
+DEVICETYPE=ovs
+TYPE=OVSBridge
+BOOTPROTO=static
+IPADDR=192.168.1.91    # your IP on the external network, may be any.
+NETMASK=255.255.255.0  # your netmask
+GATEWAY=192.168.1.1   # your gateway
+DNS1=8.8.8.8     # your nameserver
+ONBOOT=yes
+
+DEVICE=eth1
+TYPE=OVSPort
+DEVICETYPE=ovs
+OVS_BRIDGE=br-ex
+ONBOOT=yes
+
+[root@controller vagrant(keystone_admin)]# cat ifcfg-eth1-compute
+TYPE=OVSPort
+DEVICETYPE=ovs
+OVS_BRIDGE=br-ex
+ONBOOT=yes
+
+tail -f  /var/log/neutron/* & tail -f  /var/log/neutron/* &
+
+
+
+
+Whee
+ifdown eth1
+sudo ovs-vsctl del-br eth1
+sudo ovs-vsctl add-port br-ex eth1  && sudo service network restart
+ifup eth1
+ip route del default
+ip route add default via 192.168.0.1 (assuming this is your laptops gateway)
+
+#
+#https://openstack.redhat.com/Networking_in_too_much_detail ->
+#ip route del default
+#ip route add default via 192.168.1.1 (assuming this is your laptops gateway)
+#ip addr add 172.24.4.225/28 dev br-ex
+#iptables -A FORWARD -d 172.24.4.224/28 -j ACCEPT 
+#iptables -A FORWARD -s 172.24.4.224/28 -j ACCEPT 
+#iptables -t nat -I POSTROUTING 1 -s 172.24.4.224/28 -j MASQUERADE
+#
+#all the things
+
+ip route del default && ip route add default via 192.168.0.1 
+packstack  --answer-file=ansnew.txt
+#(for some reason the default route got deleted during the packstack install)
+ip route add default via 192.168.0.1
+#DEFROUTE=yes ?
+
+
+cp /root/keystonerc_admin /vagrant
+./switch_to_qemu.sh
+./setup-neutron-depreciated
+./CreateAndSourceKey
+./GetCirrosMinimalImage
+./LaunchCirrosVM cirros
+route add -net 192.168.3.0 netmask 255.255.255.0 gw 192.168.3.1
+echo "GATEWAYDEV=br-ex" >> /etc/sysconfig/network
+echo "GATEWAY=192.168.0.1" >> /etc/sysconfig/network-scripts/ifcfg-br-ex
+
+service network restart 
+for i in dhcp-agent l3-agent metadata-agent openvswitch-agent; \
+do service neutron-$i restart; done
+neutron agent-list
+#takes me 38 seconds before I can ping a host
+#cant ping the vm anymore
+
+
+#DONT NEED THIS 
+#ip addr add 192.168.3.0/24 dev br-ex
+
+#I THINK I NEED THIS
+
+do service neutron-$svc restart; done
+
+
+
+#Never did this
+#iptables -A FORWARD -d 192.168.3.0/24 -j ACCEPT 
+#iptables -A FORWARD -s 192.168.3.0/24 -j ACCEPT 
+#iptables -t nat -I POSTROUTING 1 -s 192.168.3.0/24 -j MASQUERADE
+
+
+
+#TIME WRONG?
+vi /etc/ntp.conf
+
+#Something about vlans and restarting openswitch?
+
+serivce network restart
+service openstack-neutron restart
+service openstack-neutron-dhcp-agent restart
+service openstack-neutron-l3-agent restart
+service openstack-neutron-metadata-agent restart
+service openvswitch restart
+
+https://ask.openstack.org/en/question/10453/facing-networking-issue-with-vm-instance-on-distributed-deployment-havana-release/
+#ovs-ofctl dump-flows [br-int|br-ex|br-eth2]
+
+ "debug=True" in your /etc/nova/nova
+
+
+
+
+[root@controller network-scripts]# sudo ovs-vsctl show
+695fe416-19fb-41c4-b11d-a79827fe7623
+    Bridge br-int
+        fail_mode: secure
+        Port patch-tun
+            Interface patch-tun
+                type: patch
+                options: {peer=patch-int}
+        Port br-int
+            Interface br-int
+                type: internal
+        Port "tap3c750b77-6b"
+            tag: 4095
+            Interface "tap3c750b77-6b"
+                type: internal
+        Port "qr-30d6faeb-bc"
+            tag: 1
+            Interface "qr-30d6faeb-bc"
+                type: internal
+    Bridge br-ex
+        Port "eth1"
+            Interface "eth1"
+        Port br-ex
+            Interface br-ex
+                type: internal
+    Bridge br-tun
+        Port br-tun
+            Interface br-tun
+                type: internal
+        Port patch-int
+            Interface patch-int
+                type: patch
+                options: {peer=patch-tun}
+    ovs_version: "2.1.3"
+
+
+Going to try this: https://allthenodes.wordpress.com/2014/04/02/all-in-one-openstack-using-rdo-with-external-public-ips/ 
+
+
