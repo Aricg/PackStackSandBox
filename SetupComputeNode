@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+set -v
+cd /vagrant
+./SwitchToQemu
+./setup-neutron
+./CreateAndSourceKey
+./GetCirrosMinimalImage
+sleep 15 #Place holder for actual logic. 
+./LaunchCirrosVM cirros
