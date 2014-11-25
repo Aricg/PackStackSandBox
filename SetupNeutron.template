@@ -36,8 +36,21 @@ neutron security-group-rule-create --protocol tcp --port-range-min 22 --port-ran
 
 neutron net-list  | grep [a-z] | awk '{print $4,$7}' | grep -v name
 route add -net 192.168.3.0 netmask 255.255.255.0 gw $neutron_router_start
-echo "GATEWAYDEV=br-ex" >> /etc/sysconfig/network
-echo "GATEWAY=$gateway" >> /etc/sysconfig/network-scripts/ifcfg-br-ex
+
+if grep -Fxq "GATEWAYDEV=br-ex" /etc/sysconfig/network 
+  then
+    echo "gateway dev already set"
+  else
+    echo "GATEWAYDEV=br-ex" >> /etc/sysconfig/network
+fi
+
+if grep -Fxq "GATEWAY=$gateway" /etc/sysconfig/network-scripts/ifcfg-br-ex
+  then
+    echo "gateway for br-ex already set"
+  else
+    echo "GATEWAYDEV=br-ex" >> /etc/sysconfig/network
+fi
+
 nova secgroup-list-rules default
 neutron router-show router1
 
