@@ -27,9 +27,15 @@ Get this repo
 
     git clone git@github.com:Aricg/PackStackSandBox.git && cd PackStackSandBox
 
-Modify Vagrantfile.yml to reflect the name of your bridge and the ips you want to give the virtualbox instnaces 
+Modify Vagrantfile.yml to reflect the name of your bridgei, your netmask and the ips you want to give the virtualbox instnaces. Note that I have a /22 avaliable on my home network, We will need a /24 section of this network so that we can create a route via the neutron router we later create. eg:
+
+    route add -net 192.168.3.0 netmask 255.255.255.0 gw 192.168.3.1 
+
+Without this, you will not be able to route to your VMs. (Outbound traffic will still work)
 
     bridge: docker0
+    netmask: 255.255.252.0
+    gateway: 192.168.0.1
     controller:
       bridged_ip: 192.168.1.91
       private_ip: 192.168.22.92
@@ -43,7 +49,6 @@ Launch Vagrant
 
 ssh into the vagrant controller (password is vagrant)
 
-    #eval $(./parse_yaml Vagrantfile.yml) && ssh root@$controller_bridged_ip
     vagrant ssh controller
 
 run packstack
