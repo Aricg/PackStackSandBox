@@ -98,7 +98,7 @@ run packstack
 
 Networking
 ==========
-vagrant ssh into the networking (compute node) and run:
+To setup networking, and launch your firts vim you must vagrant ssh into the networking (compute node):
 
     vagrant ssh compute
     [vagrant@compute]# sudo bash
