@@ -63,21 +63,21 @@ Vagrantfile.yml Explanation
 ) you can check this with ip r on linux or netstat -nr on osx
 
 **neutron_router_start:** This will be the start of your openstack dhcp, I also use this to guess your neutron router gateway. Make it something that is routable but that none of your computers are using. 
-eg: If my workstation and gateway(router) were in the 192.168.0.0/24 range so I could make the neutron range inside 192.168.1.0/24: 192.168.1.1-192.168.1.254
+eg: If my workstation and gateway(router) were in the 192.168.0.0/24 range I could make the neutron range inside 192.168.1.0/24 eg: 192.168.1.1-192.168.1.254
 
 **neutron_router_end:** the end of the range explained above
 
 controller:
 
-  **bridged_ip:** this interface should be on the same /24 as your workstation.
+  **bridged_ip:** this interface should be given an ip the same /24 as your workstation.
 
   **private_ip:** this interface can have any ip you want, virtualbox deals with the routing.
 
 compute:
 
-  **bridged_ip:** same but unique
+  **bridged_ip:** same rules as the controller bridged_ip but unique
 
-  **private_ip:** same but unique and on the same /24 as the private_ip above
+  **private_ip:** same rules as controller: private_ip but unique
 
 
 Launch Vagrant
@@ -98,7 +98,7 @@ run packstack
 
 Networking
 ==========
-To setup networking, and launch your first vim you must vagrant ssh into the networking (compute node):
+To setup networking, and launch your first VM you must vagrant ssh into the networking (compute node):
 
     vagrant ssh compute
     [vagrant@compute]# sudo bash
