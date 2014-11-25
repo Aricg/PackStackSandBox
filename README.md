@@ -55,19 +55,10 @@ run packstack
 
 Networking
 ==========
-This part is not done, insofar as I have hard coded ips below. I will integrate this into Vagrantfile.yml shortly. 
-vagrant ssh into the networking (compute node)
+This part is not done, insofar as I have hard coded ips in the script below. I will integrate this into Vagrantfile.yml. 
+vagrant ssh into the networking (compute node) and run:
 
-    ip route add default via 192.168.0.1
-    cd /vagrant
-    ./switch_to_qemu.sh
-    ./setup-neutron
-    ./CreateAndSourceKey
-    ./GetCirrosMinimalImage
-    ./LaunchCirrosVM cirros
-    route add -net 192.168.3.0 netmask 255.255.255.0 gw 192.168.3.1
-    echo "GATEWAYDEV=br-ex" >> /etc/sysconfig/network
-    echo "GATEWAY=192.168.0.1" >> /etc/sysconfig/network-scripts/ifcfg-br-ex
+    cd /vagrant && SetupComputeNode
 
 Trouble-shooting
 ================

@@ -1,0 +1,40 @@
+#!/bin/bash
+
+source /vagrant/keystonerc_admin  
+
+if [[ -z "$@" ]]; then
+  echo "Usage $0 name_of_vm"
+  exit 1
+fi
+
+nova flavor-create m1.nano auto 128 1 1
+
+set -v
+set -e
+
+
+external_network=$(nova floating-ip-pool-list | grep -v name | grep [a-z] | awk '{print $2}')
+
+if [[ -z "$external_network" ]]; then
+  echo "Please create an external network with avaliable floating ips for your new VM"
+  neutron net-list -c=name
+  exit 1
+fi
+
+internal_network_id=$(neutron net-list | grep -v $external_network | grep [0-9] | awk '{print $2}')
+floatip=$(nova floating-ip-create $external_network | grep $external_network | awk '{print $2}')
+novanet=$(nova net-list | grep $external_network | awk '{print $2}')
+nova boot --flavor m1.tiny \
+ --poll \
+ --image cirros \
+ --nic net-id="$internal_network_id" --security-group default \
+ --key-name default_key "$@"
+
+
+nova add-floating-ip "$@" "$floatip"
+neutron port-list
+nova console-log "$@"
+neutron floatingip-list
+#neutron floating-ip-associate <floatip> <port>
+
+
