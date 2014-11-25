@@ -27,13 +27,11 @@ Get this repo
 
     git clone git@github.com:Aricg/PackStackSandBox.git && cd PackStackSandBox
 
-Modify Vagrantfile.yml to reflect the network avaliable to you. Note that I have a /22 avaliable on my home network, We will need a /24 section of this network so that we can create a route to the neutron router we later create. eg:
+Modify Vagrantfile.yml to reflect the network avaliable to you. Note that I have a /22 avaliable on my home network, We will need to reserve a /24 section of whatever network you are on so that we can create a route to the neutron router we later create. eg:
 
     route add -net 192.168.x.0 netmask 255.255.255.0 gw 192.168.x.1 
 
 Without this, you will not be able to route to your VMs. (Outbound traffic will still work)
-
-
 
 My working config:
 
