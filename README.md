@@ -69,7 +69,7 @@ eg: If my workstation and gateway(router) were in the 192.168.0.0/24 range I cou
 
 controller:
 
-  **bridged_ip:** this interface should be given an ip the same /24 as your workstation.
+  **bridged_ip:** this interface should be given an ip on the same /24 as your workstation.
 
   **private_ip:** this interface can have any ip you want, virtualbox deals with the routing.
 
