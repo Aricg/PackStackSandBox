@@ -8,7 +8,7 @@ yum makecache fast
 yum update -y
 systemctl stop firewalld
 systemctl disable firewalld
-yum -y install iptables-services vim tcpdump
+yum -y install iptables-services vim tcpdump vim bc
 #Create this below file, otherwise starting iptables will fail
 touch /etc/sysconfig/iptables
 systemctl enable iptables && systemctl start iptables

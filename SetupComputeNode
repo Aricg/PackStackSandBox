@@ -2,6 +2,7 @@
 set -e
 set -v
 cd /vagrant
+./build_SetupNeutron
 ./SetupNeutron
 ./SwitchToQemu
 ./CreateAndSourceKey

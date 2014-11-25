@@ -13,7 +13,7 @@ compute_private_ip = settings['compute']['private_ip']
 
 #
 system('./build_answerfile')
- 
+#
 VAGRANTFILE_API_VERSION = "2"
  
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|

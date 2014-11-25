@@ -1,0 +1,52 @@
+#!/bin/bash --
+# Convert CIDR netmask to decimal x.x.x.x format and vice versa.
+
+function cidr2oct () {
+    local mask bit octs i
+    mask=$1
+
+    if grep -q '\.' <<<$mask; then
+  echo $mask
+  return
+    fi
+
+    for ((i=$mask; $i>0; i--)); do
+  bit="${bit}1"
+    done
+    i=$((32 - $mask))
+    for ((i=$i; $i>0; i--)); do
+  bit="${bit}0"
+    done
+
+    octs=$(echo 'ibase=2;obase=A;'$(cut -c 1-8 <<<$bit) |bc)
+    octs=${octs}.$(echo 'ibase=2;obase=A;'$(cut -c 9-16 <<<$bit) |bc)
+    octs=${octs}.$(echo 'ibase=2;obase=A;'$(cut -c 17-24 <<<$bit) |bc)
+    octs=${octs}.$(echo 'ibase=2;obase=A;'$(cut -c 25-32 <<<$bit) |bc)
+
+    echo $octs
+}
+
+function oct2cidr () {
+    local mask bit cidr i
+    mask=$1
+
+    if grep -qv '\.' <<<$mask; then
+  echo $mask
+  return
+    fi
+
+    for i in 1 2 3 4; do
+  bit=${bit}$(printf "%08d" \
+      $(echo 'ibase=10;obase=2;'$(cut -d '.' -f $i <<<$mask) |bc))
+    done
+    cidr=$(echo -n ${bit%%0*} |wc -m)
+
+    echo $cidr
+}
+
+mask=$1
+if grep -q '\.' <<<$mask; then
+    oct2cidr $mask
+else
+    cidr2oct $mask
+fi

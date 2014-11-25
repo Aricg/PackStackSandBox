@@ -1,0 +1,11 @@
+#!/bin/bash
+
+eval $(./parse_yaml Vagrantfile.yml)
+
+export cidr_convert=$(./maskconv $netmask)
+
+eval "cat <<EOF
+$(<SetupNeutron.template)
+EOF
+" 2> /dev/null > SetupNeutron
+
