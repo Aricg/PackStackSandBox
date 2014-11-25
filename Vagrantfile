@@ -32,7 +32,7 @@ config.vm.define "controller" do |controller|
 
     end
 
-    controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "true", :netmask => netmask
+    controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "false", :netmask => netmask
     controller.vm.network "private_network", ip: controller_private_ip
 
   #Example skeleton for using the puppet provider
@@ -65,7 +65,7 @@ config.vm.define "compute" do |compute|
       
     end
 
-    compute.vm.network "public_network", :bridge => bridge, ip: compute_bridged_ip, :auto_config => "true", :netmask => netmask
+    compute.vm.network "public_network", :bridge => bridge, ip: compute_bridged_ip, :auto_config => "false", :netmask => netmask
     compute.vm.network "private_network", ip: compute_private_ip
 
   #Example skeleton for using the puppet provider

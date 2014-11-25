@@ -1,3 +1,5 @@
+#!/bin/bash
+
 source /vagrant/keystonerc_admin  
 
  glance image-create \

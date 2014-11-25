@@ -58,7 +58,7 @@ Networking
 This part is not done, insofar as I have hard coded ips in the script below. I will integrate this into Vagrantfile.yml. 
 vagrant ssh into the networking (compute node) and run:
 
-    cd /vagrant && SetupComputeNode
+    [root@compute vagrant]# cd /vagrant && ./SetupComputeNode
 
 Trouble-shooting
 ================
