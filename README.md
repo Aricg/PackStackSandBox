@@ -59,7 +59,7 @@ Vagrantfile.yml Explanation
 
 **netmask:** netmask of your private subnet, probably given to you via dhcp. you can see this with ifconfig, however on osx if will be in the unreadble format, something like 0xffffff00 Refer here for a table that human can read. http://www.pawprint.net/designresources/netmask-converter.php Most home networks only give out a /24 you will need to log into your router and change your range to at least a /23 so that we an properly route to the router that neutron creates. 
 
-**gateway:** gateway for internet (your routers ip, this is also the ip you go to to increase your network size
+**gateway:**  Your workstations gateway to the internet (your routers ip, this is also the ip you go to to increase your network size
 ) you can check this with ip r on linux or netstat -nr on osx
 
 **neutron_router_start:** This will be the start of your openstack dhcp, I also use this to guess your neutron router gateway. Make it something that is routable but that none of your computers are using. 
