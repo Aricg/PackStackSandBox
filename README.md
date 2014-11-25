@@ -112,4 +112,9 @@ When restarting netwoking, the neutron switch become unresponsive
     neutron agent-list
     #takes me 38 seconds before I can ping a the router
 
+Things that still suck
+======================
+Vagrant reconfigures the network device eth1 on boot. even tho I have managed set to false.
+this breaks everything. Gar.
+
 
