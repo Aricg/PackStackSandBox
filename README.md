@@ -57,13 +57,13 @@ Vagrantfile.yml Explanation
 
 **bridge:** name of your bridge interface ($ brctl show )
 
-**netmask:** netmask of your private subnet, probably given to you via dhcp. you can see this with ifconfig,however on osx if will be in the unreadble format, something like 0xffffff00 Refer here for a table that human can read. http://www.pawprint.net/designresources/netmask-converter.php Most home networks only give out a /24 you will need to log into your router and change your range to at least a /23 so that we an properly route to the router that neutron creates. 
+**netmask:** netmask of your private subnet, probably given to you via dhcp. you can see this with ifconfig, however on osx if will be in the unreadble format, something like 0xffffff00 Refer here for a table that human can read. http://www.pawprint.net/designresources/netmask-converter.php Most home networks only give out a /24 you will need to log into your router and change your range to at least a /23 so that we an properly route to the router that neutron creates. 
 
 **gateway:** gateway for internet (your routers ip, this is also the ip you go to to increase your network size
 ) you can check this with ip r on linux or netstat -nr on osx
 
 **neutron_router_start:** This will be the start of your openstack dhcp, I also use this to guess your neutron router gateway. Make it something that is routable but that none of your computers are using. 
-eg: mycomputer is 192.168.0.2 so we make the neutron range 192.168.1.1-192.168.1.254
+eg: If my workstation and gateway(router) were in the 192.168.0.0/24 range so I could make the neutron range inside 192.168.1.0/24: 192.168.1.1-192.168.1.254
 
 **neutron_router_end:** the end of the range explained above
 
