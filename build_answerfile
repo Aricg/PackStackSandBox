@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#This script replaces #placeholders in ans.template with the values found in Vagrantfile.yml
+
 eval $(./parse_yaml Vagrantfile.yml)
 
 eval "cat <<EOF

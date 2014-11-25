@@ -1,4 +1,5 @@
 #!/bin/bash
+#This script replaces #placeholders in SetupNeutron.template with the values found in Vagrantfile.yml to generate "SetupNeutron"
 
 eval $(./parse_yaml Vagrantfile.yml)
 
@@ -9,3 +10,4 @@ $(<SetupNeutron.template)
 EOF
 " 2> /dev/null > SetupNeutron
 
+chmod +x SetupNeutron
