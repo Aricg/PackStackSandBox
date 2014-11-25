@@ -4,6 +4,9 @@
 eval $(./parse_yaml Vagrantfile.yml)
 
 export cidr_convert=$(./maskconv $netmask)
+peip=${neutron_router_start%.*}; 
+export network="$peip".0
+
 
 eval "cat <<EOF
 $(<SetupNeutron.template)

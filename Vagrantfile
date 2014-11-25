@@ -3,9 +3,13 @@
 #
 require 'yaml'
 settings = YAML.load_file 'Vagrantfile.yml'
+
 bridge = settings['bridge']
 netmask = settings['netmask']
 gateway = settings['gateway']
+#nrs = settings['neutron_router_start']
+#nre = settings['neutron_router_end']
+
 controller_bridged_ip = settings['controller']['bridged_ip']
 controller_private_ip = settings['controller']['private_ip']
 compute_bridged_ip = settings['compute']['bridged_ip']
@@ -18,7 +22,9 @@ VAGRANTFILE_API_VERSION = "2"
  
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
- 
+# nre
+# nrs
+
 # Begin controller
 config.vm.define "controller" do |controller|
   controller.vm.box = "controller"
