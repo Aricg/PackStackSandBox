@@ -114,6 +114,13 @@ When restarting netwoking, the neutron switch become unresponsive, you'll need t
     neutron agent-list
     #takes me 38 seconds before I can ping a the router
 
+Vagrant exits with a syntax error
+    
+    Message: undefined method `[]' for nil:NilClass
+
+Try running the included ./testyaml you may need to install the ruby yaml library
+
+
 Things that still suck
 ======================
 Vagrant reconfigures the network device eth1 on boot. even tho I have managed set to false.
