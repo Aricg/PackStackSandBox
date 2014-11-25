@@ -48,12 +48,8 @@ ssh into the vagrant controller (password is vagrant)
 
 run packstack
 
-The default route gets deleted when br-ex comes up, the installer fails. in the steps below I've readded the route and run packstack again. this is a temporary workaround
-    
     cd /vagrant
     sudo bash
-    packstack  --answer-file=ans.txt
-    ip route add default via 192.168.0.1
     packstack  --answer-file=ans.txt
     cp /root/keystonerc_admin /vagrant
 
@@ -62,6 +58,7 @@ Networking
 This part is not done, insofar as I have hard coded ips below. I will integrate this into Vagrantfile.yml shortly. 
 vagrant ssh into the networking (compute node)
 
+    ip route add default via 192.168.0.1
     cd /vagrant
     ./switch_to_qemu.sh
     ./setup-neutron
