@@ -94,15 +94,15 @@ run packstack
 
 Networking
 ==========
-This part is not done, insofar as I have hard coded ips in the script below. I will integrate this into Vagrantfile.yml. 
 vagrant ssh into the networking (compute node) and run:
 
     vagrant ssh compute
-    [root@compute vagrant]# cd /vagrant && ./SetupComputeNode
+    [vagrant@compute]# sudo bash
+    [root@compute ]# cd /vagrant && ./SetupComputeNode
 
 Trouble-shooting
 ================
-When restarting netwoking, the neutron switch become unresponsive
+When restarting netwoking, the neutron switch become unresponsive, you'll need to restart various neutron components
 
     service network restart
     for i in dhcp-agent l3-agent metadata-agent openvswitch-agent; \
