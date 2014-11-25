@@ -9,7 +9,6 @@ netmask = settings['netmask']
 gateway = settings['gateway']
 #nrs = settings['neutron_router_start']
 #nre = settings['neutron_router_end']
-
 controller_bridged_ip = settings['controller']['bridged_ip']
 controller_private_ip = settings['controller']['private_ip']
 compute_bridged_ip = settings['compute']['bridged_ip']

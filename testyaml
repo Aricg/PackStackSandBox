@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+#
+require 'yaml'
+thing = YAML.load_file('Vagrantfile.yml')
+puts thing.inspect
