@@ -79,7 +79,9 @@ compute:
 
   **private_ip:** same but unique and on the same /24 as the private_ip above
 
+
 Launch Vagrant
+==============
     
     vagrant up
 
