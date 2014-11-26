@@ -98,7 +98,7 @@ run packstack
 
 Networking
 ==========
-To setup networking, and launch your first VM you must vagrant ssh into the networking (compute node):
+To setup networking, and launch your first VM you must wait for the above operations to complete. (packstack and copying the keystonerc_admin) Once thos are done, vagrant ssh into the networking (compute node):
 
     vagrant ssh compute
     [vagrant@compute]# sudo bash
