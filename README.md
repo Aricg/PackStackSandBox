@@ -93,12 +93,11 @@ run packstack
 
     cd /vagrant
     sudo bash
-    packstack  --answer-file=ans.txt
-    cp /root/keystonerc_admin /vagrant
+    packstack  --answer-file=ans.txt && cp /root/keystonerc_admin /vagrant
 
 Networking
 ==========
-To setup networking, and launch your first VM you must wait for the above operations to complete. (packstack and copying the keystonerc_admin) Once thos are done, vagrant ssh into the networking (compute node):
+To setup networking, and launch the cirros minimal VM you must wait for the above operations to complete. (packstack and copying the keystonerc_admin) Once those are done, vagrant ssh into the networking (compute node):
 
     vagrant ssh compute
     [vagrant@compute]# sudo bash
@@ -122,8 +121,8 @@ Try running the included ./testyaml you may need to install the ruby yaml librar
 
 Vagrant Can't download the box on OSX
 
-  vagrant box add --name controller https://build.opnfv.org/downloads/controller.box 
-  vagrant init controller
+    vagrant box add --name controller https://build.opnfv.org/downloads/controller.box 
+    vagrant init controller
 
 This will help you debug some wierd permission erros that we've seen on osx
 
