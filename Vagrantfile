@@ -7,22 +7,18 @@ settings = YAML.load_file 'Vagrantfile.yml'
 bridge = settings['bridge']
 netmask = settings['netmask']
 gateway = settings['gateway']
-#nrs = settings['neutron_router_start']
-#nre = settings['neutron_router_end']
 controller_bridged_ip = settings['controller']['bridged_ip']
 controller_private_ip = settings['controller']['private_ip']
 compute_bridged_ip = settings['compute']['bridged_ip']
 compute_private_ip = settings['compute']['private_ip']
 
-#
+# This Builds the answerfile from the values in Vagrantfile.yml
 system('./build_answerfile')
-#
+
+
 VAGRANTFILE_API_VERSION = "2"
  
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-
-# nre
-# nrs
 
 # Begin controller
 config.vm.define "controller" do |controller|
@@ -59,9 +55,9 @@ end
  
   # Begin compute
 config.vm.define "compute" do |compute|
-  compute.vm.box = "compute"
+  compute.vm.box = "controller"
   compute.vm.hostname = "compute"
-  compute.vm.box_url = "https://build.opnfv.org/downloads/compute.box"
+  compute.vm.box_url = "https://build.opnfv.org/downloads/controller.box"
  
     compute.vm.provider "virtualbox" do |v|
 
