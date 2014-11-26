@@ -120,6 +120,13 @@ Vagrant exits with a syntax error
 
 Try running the included ./testyaml you may need to install the ruby yaml library
 
+Vagrant Can't download the box on OSX
+
+  vagrant box add --name controller https://build.opnfv.org/downloads/controller.box 
+  vagrant init controller
+
+This will help you debug some wierd permission erros that we've seen on osx
+
 
 Things that still suck
 ======================
