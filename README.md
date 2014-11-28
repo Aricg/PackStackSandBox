@@ -25,7 +25,7 @@ Enable bridged mode on your local machine
 
 Get this repo
 
-    git clone git@github.com:Aricg/PackStackSandBox.git && cd PackStackSandBox
+    git clone https://github.com/Aricg/PackStackSandBox.git && cd PackStackSandBox
 
 
  Vagrantfile.yml 
