@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [[ $(whoami) != "root" ]]
+then
+  echo "This script must be run as root"
+  exit 1
+fi
+
+eval $(./parse_yaml Vagrantfile.yml)
+
+set -v
+ifdown eth1
+cp -n /vagrant/ifcfg-eth1 /etc/sysconfig/network-scripts/
+ifup eth1
+ip route del default
+ip route add default via "$gateway"
+

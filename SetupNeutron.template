@@ -48,7 +48,7 @@ if grep -Fxq "GATEWAY=$gateway" /etc/sysconfig/network-scripts/ifcfg-br-ex
   then
     echo "gateway for br-ex already set"
   else
-    echo "GATEWAYDEV=br-ex" >> /etc/sysconfig/network
+    echo "GATEWAY=$gateway" >> /etc/sysconfig/network-scripts/ifcfg-br-ex
 fi
 
 nova secgroup-list-rules default
