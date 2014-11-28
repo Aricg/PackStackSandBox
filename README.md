@@ -127,9 +127,10 @@ Vagrant Can't download the box on OSX
 This will help you debug some wierd permission erros that we've seen on osx
 
 
-Things that still suck
+Caveats
 ======================
 Vagrant reconfigures the network device eth1 on boot. even tho I have managed set to false.
-this breaks everything. Gar.
+You will need to run /vagrant/SetupComputeNodeAfterReboot each time the compute node is rebooted.
+
 
 
