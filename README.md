@@ -33,7 +33,7 @@ Get this repo
  Vagrantfile.yml 
 =================
 
-Modify Vagrantfile.yml.template.bridgemode or Vagrantfile.yml.template.natmode and copy to Vagrantfile.yml to reflect the network avaliable to you. Below I am setting up under bridged mode and have a /22 avaliable on my home network, We will need to reserve a /24 section of whatever network you are on so that we can create a route to the neutron router we later create. eg:
+Modify Vagrantfile.yml.template.bridgemode or Vagrantfile.yml.template.natmode and copy to Vagrantfile.yml to reflect the network avaliable to you. (for the nat template it should just work as is)  Below I am setting up under bridged mode and have a /22 avaliable on my home network, We will need to reserve a /24 section of whatever network you are on so that we can create a route to the neutron router we later create. eg:
 
     route add -net 192.168.x.0 netmask 255.255.255.0 gw 192.168.x.1 
 
