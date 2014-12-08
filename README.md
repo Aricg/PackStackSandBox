@@ -3,6 +3,8 @@ PackStackSandBox
 
 A template for further sanbox work with packstack, brings up two nodes. One controller and One Compute/Netowrking. Should be easy to modify to meet your needs. 
 
+Can be run in bridged mode or nat mode, see below for details
+
 they can be reached after vagrant up with
     vagrant ssh controller
     vagrant ssh compute 
@@ -31,7 +33,7 @@ Get this repo
  Vagrantfile.yml 
 =================
 
-Modify Vagrantfile.yml to reflect the network avaliable to you. Note that I have a /22 avaliable on my home network, We will need to reserve a /24 section of whatever network you are on so that we can create a route to the neutron router we later create. eg:
+Modify Vagrantfile.yml.template.bridgemode or Vagrantfile.yml.template.natmode and copy to Vagrantfile.yml to reflect the network avaliable to you. Below I am setting up under bridged mode and have a /22 avaliable on my home network, We will need to reserve a /24 section of whatever network you are on so that we can create a route to the neutron router we later create. eg:
 
     route add -net 192.168.x.0 netmask 255.255.255.0 gw 192.168.x.1 
 
@@ -55,14 +57,19 @@ My working config:
 Vagrantfile.yml Explanation
 ==========================
 
-**bridge:** name of your bridge interface ($ brctl show )
+Warning, make sure there are no trailing white spaces in this file
+
+**nat_mode:** set to yes for nat mode, leave blank for bridge mode
+
+**bridge:** name of your bridge interface ($ brctl show ) leave blank for nat mode
 
 **netmask:** netmask of your private subnet, probably given to you via dhcp. you can see this with ifconfig, however on osx if will be in the unreadble format, something like 0xffffff00 Refer here for a table that human can read. http://www.pawprint.net/designresources/netmask-converter.php Most home networks only give out a /24 you will need to log into your router and change your range to at least a /23 so that we an properly route to the router that neutron creates. 
 
-**gateway:**  Your workstations gateway to the internet (your routers ip, this is also the ip you go to to increase your network size
+**gateway:**  For bridged mode Your workstations gateway to the internet (your routers ip, this is also the ip you go to to increase your network size
 ) you can check this with ip r on linux or netstat -nr on osx
+For nat mode set this to the first ip in the range you are choosing for private_ip 
 
-**neutron_router_start:** This will be the start of your openstack dhcp, I also use this to guess your neutron router gateway. Make it something that is routable but that none of your computers are using. 
+**neutron_router_start:** This will be the start of your openstack dhcp, I also use this as your neutron router gateway. Make it something that is routable but that none of your computers are using. 
 eg: If my workstation and gateway(router) were in the 192.168.0.0/24 range I could make the neutron range inside 192.168.1.0/24 eg: 192.168.1.1-192.168.1.254
 
 **neutron_router_end:** the end of the range explained above
@@ -79,6 +86,7 @@ compute:
 
   **private_ip:** same rules as controller: private_ip but unique
 
+for nat mode set the bridged_ip and private_ip to the same values for each host (as seen in Vagrantfile.yml.template.natmode)
 
 Launch Vagrant
 ==============
@@ -89,7 +97,7 @@ ssh into the vagrant controller (password is vagrant)
 
     vagrant ssh controller
 
-run packstack
+run packstack (for nat mode complete steps below first) 
 
     cd /vagrant
     sudo bash
@@ -152,7 +160,7 @@ Vagrant ssh into the compute and the controller node and set the default route t
 
 #TODO automate this.
     ip route del default
-    ip route add default via 10.0.20.1 dev eth1
+    ip route add default via 10.0.20.1 (the gateway set it your Vagrantfile.yml) dev eth1
 
 You are now ready to "run packstack" (see above) 
 
