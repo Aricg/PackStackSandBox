@@ -1,8 +1,7 @@
 #make sure that there are is no trailing whitespace!
 #Leave nat mode blank to enable bridge mode
 nat_mode: yes
-nat_device: eth0
-bridge: docker0
+bridge:
 netmask: 255.255.252.0
 gateway: 10.0.20.1
 

@@ -3,3 +3,4 @@ keystonerc*
 .vagrant/
 ans.txt
 SetupNeutron
+Vagrantfile.yml

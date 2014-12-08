@@ -13,5 +13,8 @@ yum -y install iptables-services vim tcpdump vim bc
 touch /etc/sysconfig/iptables
 systemctl enable iptables && systemctl start iptables
 systemctl status iptables
+
+if [ -n "${1}" ]; then
 ip route del default
 ip route add default via $1
+fi

@@ -4,6 +4,7 @@
 require 'yaml'
 settings = YAML.load_file 'Vagrantfile.yml'
 
+nat_mode = settings['nat_mode']
 bridge = settings['bridge']
 netmask = settings['netmask']
 gateway = settings['gateway']
@@ -13,7 +14,6 @@ compute_bridged_ip = settings['compute']['bridged_ip']
 compute_private_ip = settings['compute']['private_ip']
 
 # This Builds the answerfile from the values in Vagrantfile.yml
-system('./build_answerfile')
 
 
 VAGRANTFILE_API_VERSION = "2"
@@ -27,14 +27,24 @@ config.vm.define "controller" do |controller|
   controller.vm.box_url = "https://build.opnfv.org/downloads/controller.box"
 
     controller.vm.provider "virtualbox" do |v|
-
       v.customize ["modifyvm", :id, "--cpus", 1]
       v.customize ["modifyvm", :id, "--memory", 4096]
-
     end
 
-    controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "false", :netmask => netmask
-    controller.vm.network "private_network", ip: controller_private_ip
+          if nat_mode.nil? or nat_mode == 0
+          puts "nat mode = no " 
+          controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "true", :netmask => netmask
+          controller.vm.network "private_network", ip: controller_private_ip
+          controller.vm.provision :shell, :path => "prepare.sh", :args => gateway
+          system('./build_answerfile.bridge')
+
+          else
+          puts "nat mode = yes " 
+          controller.vm.network "private_network", ip: controller_private_ip, :netmask => "255.255.252.0"
+          controller.vm.network :forwarded_port, host: 8080, guest: 80
+          controller.vm.provision "shell", path: "prepare.sh"
+          system('./build_answerfile.nat')
+          end
 
   #Example skeleton for using the puppet provider
   controller.vm.provision "puppet" do |puppet|
@@ -47,7 +57,6 @@ config.vm.define "controller" do |controller|
       puppet.hiera_config_path = "hiera.yaml"
   end
 
-  controller.vm.provision :shell, :path => "prepare.sh", :args => gateway
   #config.vm.provision "shell", path: "prepare.sh"
 
 end
@@ -66,8 +75,14 @@ config.vm.define "compute" do |compute|
       
     end
 
-    compute.vm.network "public_network", :bridge => bridge, ip: compute_bridged_ip, :auto_config => "false", :netmask => netmask
-    compute.vm.network "private_network", ip: compute_private_ip
+        if nat_mode.nil? or nat_mode == 0
+          compute.vm.network "public_network", :bridge => bridge, ip: compute_bridged_ip, :auto_config => "true", :netmask => netmask
+          compute.vm.network "private_network", ip: compute_private_ip
+          compute.vm.provision :shell, :path => "prepare.sh", :args => gateway
+        else 
+          compute.vm.network "private_network", ip: compute_private_ip, :netmask => "255.255.252.0"
+          compute.vm.provision "shell", path: "prepare.sh"
+        end
 
   #Example skeleton for using the puppet provider
   compute.vm.provision "puppet" do |puppet|
@@ -80,7 +95,6 @@ config.vm.define "compute" do |compute|
       puppet.hiera_config_path = "hiera.yaml"
   end
 
-  compute.vm.provision :shell, :path => "prepare.sh", :args => gateway
 
 end
  

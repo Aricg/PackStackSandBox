@@ -8,6 +8,10 @@ fi
 #Must be run on Network node due to ip netns portion
 source /vagrant/keystonerc_admin 
 
+for port in $(neutron port-list -c id | egrep -v '\-\-|id' | awk '{print $2}'); do
+	neutron port-delete ${port}
+done
+
 for routerid in $(neutron router-list | grep [0-9] | awk '{print $2}'); do
 	neutron router-gateway-clear $routerid
 

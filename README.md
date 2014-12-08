@@ -127,10 +127,47 @@ Vagrant Can't download the box on OSX
 This will help you debug some wierd permission erros that we've seen on osx
 
 
+Nat Networks
+=============
+Nat networking will provide the gateway to the internet as well as connectivity between hosts throught the vboxnetX interface created by vagrant
+Setup Masquerade/Forwarding on your host to you vboxnet interface
+
+make sure these are set in /etc/sysctl.d
+
+    net.ipv4.ip_forward = 1
+    net.ipv4.conf.all.proxy_arp = 1
+
+And loaded
+
+    sudo sysctl -p
+
+In my example my hosts interface for internet connetiviy is docker0 (yours might be eth0 for example) and my the vboxnet brought up by vagrant up is vboxnet4 and the subnet I have set for the sandbox machines in the vagrantfile.yaml is 10.0.20.0/22
+
+    iptables -A FORWARD -o docker0 -i vboxnet4 -s 10.0.20.0/22 -m conntrack --ctstate NEW -j ACCEPT
+    iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+    iptables -A POSTROUTING -t nat -j MASQUERADE
+
+In this example we have set the vboxnet to  the 10.0.20.0/22 range.
+Vagrant ssh into the compute and the controller node and set the default route to vboxnet0 rather than the nat device that vagrant sets at default
+
+#TODO automate this.
+    ip route del default
+    ip route add default via 10.0.20.1 dev eth1
+
+You are now ready to "run packstack" (see above) 
+
 Caveats
 ======================
 Vagrant reconfigures the network device eth1 on boot. even tho I have managed set to false.
 You will need to run /vagrant/SetupComputeNodeAfterReboot each time the compute node is rebooted.
 
 
+Contribute!
+===========
+
+Fork this repo
+Create your feature branch (git checkout -b my-new-feature)
+Commit your changes (git commit -am 'Add some feature')
+Push to the branch (git push origin my-new-feature)
+Create new Pull Request
 

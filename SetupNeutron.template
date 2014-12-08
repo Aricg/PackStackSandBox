@@ -20,7 +20,7 @@ neutron router-interface-add router1 subinternal_network1
 neutron net-create external_network1 --router:external=True
 
 
-neutron subnet-create external_network1 $gateway/$cidr_convert \
+neutron subnet-create  --gateway $neutron_router_start external_network1 $gateway/$cidr_convert \
   --name subexternal_network1 --enable_dhcp=False \
   --allocation-pool start=$neutron_router_start,end=$neutron_router_end --gateway=$gateway
 
@@ -37,19 +37,19 @@ neutron security-group-rule-create --protocol tcp --port-range-min 22 --port-ran
 #neutron net-list  | grep [a-z] | awk '{print $4,$7}' | grep -v name
 route add -net $network netmask 255.255.255.0 gw $neutron_router_start
 
-if grep -Fxq "GATEWAYDEV=br-ex" /etc/sysconfig/network 
-  then
-    echo "gateway dev already set"
-  else
-    echo "GATEWAYDEV=br-ex" >> /etc/sysconfig/network
-fi
-
-if grep -Fxq "GATEWAY=$gateway" /etc/sysconfig/network-scripts/ifcfg-br-ex
-  then
-    echo "gateway for br-ex already set"
-  else
-    echo "GATEWAY=$gateway" >> /etc/sysconfig/network-scripts/ifcfg-br-ex
-fi
+#if grep -Fxq "GATEWAYDEV=br-ex" /etc/sysconfig/network 
+#  then
+#    echo "gateway dev already set"
+#  else
+#    echo "GATEWAYDEV=br-ex" >> /etc/sysconfig/network
+#fi
+#
+#if grep -Fxq "GATEWAY=$gateway" /etc/sysconfig/network-scripts/ifcfg-br-ex
+#  then
+#    echo "gateway for br-ex already set"
+#  else
+#    echo "GATEWAY=$gateway" >> /etc/sysconfig/network-scripts/ifcfg-br-ex
+#fi
 
 nova secgroup-list-rules default
 neutron router-show router1

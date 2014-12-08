@@ -1,0 +1,13 @@
+nat_mode:
+bridge: docker0
+netmask: 255.255.252.0
+gateway: 192.168.0.1
+neutron_router_start: 192.168.3.1
+neutron_router_end: 192.168.3.128
+controller:
+  bridged_ip: 192.168.1.91
+  private_ip: 192.168.22.92
+
+compute:
+  bridged_ip: 192.168.1.93
+  private_ip: 192.168.22.94
