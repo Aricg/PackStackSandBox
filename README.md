@@ -134,6 +134,13 @@ Vagrant Can't download the box on OSX
 
 This will help you debug some wierd permission erros that we've seen on osx
 
+Wierd locale issue. 
+
+    ERROR : Error appeared during Puppet run: 10.0.20.2_glance.pp
+    Notice: /Stage[main]/Glance::Registry/Exec[glance-manage db_sync]/returns: ValueError: unknown locale: UTF-8
+
+Edit your /etc/ssh_config file on your Mac OS X system and remove LC_CTYPE from SendEnv. This will cause the ssh client to stop propagating LC_CTYPE to the ssh servers.
+
 
 Nat Networks
 =============
