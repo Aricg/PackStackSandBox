@@ -135,7 +135,11 @@ run packstack (for nat mode complete steps below first)
 
     cd /vagrant
     sudo bash
-    packstack  --answer-file=ans.txt && cp /root/keystonerc_admin /vagrant
+    packstack  --answer-file=ans.txt && yes|cp /root/keystonerc_admin /vagrant
+
+the answerfile is generated from ans.template or ans.NAT.template when you run vagrant up. 
+packstack should now prompt you for the root password of both nodes. The password is "vagrant"
+if packstack fails for some reason, just run it again. 
 
 Networking
 ==========
@@ -145,6 +149,7 @@ To setup networking, and launch the cirros minimal VM you must wait for the abov
     [vagrant@compute]# sudo bash
     [root@compute ]# cd /vagrant && ./SetupComputeNode
 
+That's it everything should work now.
 
 Tools
 =====
