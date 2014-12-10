@@ -5,7 +5,7 @@ A template for further sanbox work with packstack, brings up two nodes. One cont
 
 Can be run in bridged mode or nat mode, see below for details
 
-they can be reached after vagrant up with
+nodes can be reached after vagrant up with
     vagrant ssh controller
     vagrant ssh compute 
 
@@ -19,27 +19,67 @@ Install vagrant-vbguest
 
     vagrant plugin install vagrant-vbguest
 
-Enable bridged mode on your local machine
 
-    $ brctl show
-    bridge name     bridge id               STP enabled     interfaces
-    docker0         8000.28d244719f30       no              enp0s25
 
 Get this repo
 
     git clone https://github.com/Aricg/PackStackSandBox.git && cd PackStackSandBox
 
 
+Nat Mode
+========
+
+Copy Vagrantfile.yml.template.natmode to Vagrantfile.yml 
+
+Nat networking will provide the gateway to the internet as well as connectivity between hosts throught the vboxnetX interface created by vagrant
+
+Forwarding
+==========
+
+Setup Masquerade/Forwarding on your host to you vboxnet interface
+
+make sure these are set in /etc/sysctl.d
+
+    net.ipv4.ip_forward = 1
+    net.ipv4.conf.all.proxy_arp = 1
+
+And loaded
+
+    sudo sysctl -p
+
+In my example my hosts interface for internet connetiviy is docker0 (yours might be eth0 for example) and my the vboxnet brought up by vagrant up is vboxnet4 and the subnet I have set for the sandbox machines in the vagrantfile.yaml is 10.0.20.0/22
+
+    iptables -A FORWARD -o docker0 -i vboxnet4 -s 10.0.20.0/22 -m conntrack --ctstate NEW -j ACCEPT
+    iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+    iptables -A POSTROUTING -t nat -j MASQUERADE
+
+In this example we have set the vboxnet to  the 10.0.20.0/22 range.
+
+Vagrant ssh into the compute and the controller node and set the default route to vboxnet0 rather than the nat device that vagrant sets at default
+
+#TODO automate this.
+    ip route del default
+    ip route add default via 10.0.20.1 (the gateway set it your Vagrantfile.yml) dev eth1
+
+You are now ready to "run packstack" (see below) 
+
+Bridged Mode
+===========
+
+If you are able to configure and use a bridge we can bring up openstack VMs on your local network. you will need a netmask of 23 or below.
+
+My bridge in this readme is called docker0
+
+    $ brctl show
+    bridge name     bridge id               STP enabled     interfaces
+    docker0     
+
  Vagrantfile.yml 
 =================
 
-Modify Vagrantfile.yml.template.bridgemode or Vagrantfile.yml.template.natmode and copy to Vagrantfile.yml to reflect the network avaliable to you. (for the nat template it should just work as is)  Below I am setting up under bridged mode and have a /22 avaliable on my home network, We will need to reserve a /24 section of whatever network you are on so that we can create a route to the neutron router we later create. eg:
+To start copy Vagrantfile.yml.template.bridgemode to Vagrantfile.yml to reflect the network avaliable to you. In this example I have a /22 avaliable on my home network, Later we reserve a /24 section of my /22 network for the neutron router we create. 
 
-    route add -net 192.168.x.0 netmask 255.255.255.0 gw 192.168.x.1 
-
-Without this, you will not be able to route to your VMs. (Outbound traffic will still work)
-
-My working config:
+My example config:
 
     bridge: docker0  
     netmask: 255.255.252.0 
@@ -48,11 +88,10 @@ My working config:
     neutron_router_end: 192.168.3.128
     controller:
       bridged_ip: 192.168.1.91
-      private_ip: 192.168.22.92
+      private_ip: 10.2.20.2
     compute:
       bridged_ip: 192.168.1.93
-      private_ip: 192.168.22.94
-
+      private_ip: 10.2.20.3
 
 Vagrantfile.yml Explanation
 ==========================
@@ -69,8 +108,7 @@ Warning, make sure there are no trailing white spaces in this file
 ) you can check this with ip r on linux or netstat -nr on osx
 For nat mode set this to the first ip in the range you are choosing for private_ip 
 
-**neutron_router_start:** This will be the start of your openstack dhcp, I also use this as your neutron router gateway. Make it something that is routable but that none of your computers are using. 
-eg: If my workstation and gateway(router) were in the 192.168.0.0/24 range I could make the neutron range inside 192.168.1.0/24 eg: 192.168.1.1-192.168.1.254
+**neutron_router_start:** This will be the start of your openstack dhcp, I also use this as your neutron router gateway. give neutron its own /24 range
 
 **neutron_router_end:** the end of the range explained above
 
@@ -142,34 +180,6 @@ Wierd locale issue.
 Edit your /etc/ssh_config file on your Mac OS X system and remove LC_CTYPE from SendEnv. This will cause the ssh client to stop propagating LC_CTYPE to the ssh servers.
 
 
-Nat Networks
-=============
-Nat networking will provide the gateway to the internet as well as connectivity between hosts throught the vboxnetX interface created by vagrant
-Setup Masquerade/Forwarding on your host to you vboxnet interface
-
-make sure these are set in /etc/sysctl.d
-
-    net.ipv4.ip_forward = 1
-    net.ipv4.conf.all.proxy_arp = 1
-
-And loaded
-
-    sudo sysctl -p
-
-In my example my hosts interface for internet connetiviy is docker0 (yours might be eth0 for example) and my the vboxnet brought up by vagrant up is vboxnet4 and the subnet I have set for the sandbox machines in the vagrantfile.yaml is 10.0.20.0/22
-
-    iptables -A FORWARD -o docker0 -i vboxnet4 -s 10.0.20.0/22 -m conntrack --ctstate NEW -j ACCEPT
-    iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-    iptables -A POSTROUTING -t nat -j MASQUERADE
-
-In this example we have set the vboxnet to  the 10.0.20.0/22 range.
-Vagrant ssh into the compute and the controller node and set the default route to vboxnet0 rather than the nat device that vagrant sets at default
-
-#TODO automate this.
-    ip route del default
-    ip route add default via 10.0.20.1 (the gateway set it your Vagrantfile.yml) dev eth1
-
-You are now ready to "run packstack" (see above) 
 
 Caveats
 ======================
