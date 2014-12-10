@@ -19,8 +19,6 @@ Install vagrant-vbguest
 
     vagrant plugin install vagrant-vbguest
 
-
-
 Get this repo
 
     git clone https://github.com/Aricg/PackStackSandBox.git && cd PackStackSandBox
@@ -59,7 +57,7 @@ TODO automate this.
     ip route del default
     ip route add default via 10.0.20.1 (the gateway set it your Vagrantfile.yml) dev eth1
 
-You are now ready to "run packstack" (see below) 
+You are now ready to "Launch Vagrant" (see below) 
 
 Bridged Mode
 ===========
@@ -88,6 +86,8 @@ My example config:
     compute:
       bridged_ip: 192.168.1.93
       private_ip: 10.2.20.3
+    
+You are now ready to "Launch Vagrant" (see below)
 
 Vagrantfile.yml Explanation
 ==========================
