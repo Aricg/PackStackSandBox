@@ -33,9 +33,6 @@ Copy Vagrantfile.yml.template.natmode to Vagrantfile.yml
 
 Nat networking will provide the gateway to the internet as well as connectivity between hosts throught the vboxnetX interface created by vagrant
 
-Forwarding
-==========
-
 Setup Masquerade/Forwarding on your host to you vboxnet interface
 
 make sure these are set in /etc/sysctl.d
@@ -57,7 +54,8 @@ In this example we have set the vboxnet to  the 10.0.20.0/22 range.
 
 Vagrant ssh into the compute and the controller node and set the default route to vboxnet0 rather than the nat device that vagrant sets at default
 
-#TODO automate this.
+TODO automate this.
+
     ip route del default
     ip route add default via 10.0.20.1 (the gateway set it your Vagrantfile.yml) dev eth1
 
@@ -74,8 +72,6 @@ My bridge in this readme is called docker0
     bridge name     bridge id               STP enabled     interfaces
     docker0     
 
- Vagrantfile.yml 
-=================
 
 To start copy Vagrantfile.yml.template.bridgemode to Vagrantfile.yml to reflect the network avaliable to you. In this example I have a /22 avaliable on my home network, Later we reserve a /24 section of my /22 network for the neutron router we create. 
 
