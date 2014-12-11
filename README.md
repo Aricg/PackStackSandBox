@@ -151,6 +151,35 @@ To setup networking, and launch the cirros minimal VM you must wait for the abov
 
 That's it everything should work now.
 
+Testing
+=======
+
+Natmode:
+got to http://localhost:8080/dashboard/ to see your dashboard.
+
+
+
+
+Bridgemode:
+
+  Got to http:// compute: bridged_ip: from your vagtantfile.yml
+
+ssh into your machine and ping the outside world
+
+    [root@compute vagrant]# source keystonerc_admin
+    [root@compute vagrant(keystone_admin)]# neutron floatingip-list
+    +--------------------------------------+------------------+---------------------+--------------------------------------+
+    | id                                   | fixed_ip_address | floating_ip_address | port_id                              |
+    +--------------------------------------+------------------+---------------------+--------------------------------------+
+    | ea3d5757-e646-4d6e-9c0d-e6304cee3ff0 | 172.17.0.2       | 10.0.23.2           | 53157795-741e-479c-afb6-1ceb26fd500e |
+    +--------------------------------------+------------------+---------------------+--------------------------------------+
+    [root@compute vagrant(keystone_admin)]# ssh cirros@10.0.23.2
+    cirros@10.0.23.2's password: cubswin:)
+    $ ping 8.8.8.8
+    PING 8.8.8.8 (8.8.8.8): 56 data bytes
+    64 bytes from 8.8.8.8: seq=0 ttl=50 time=24.782 ms
+    64 bytes from 8.8.8.8: seq=1 ttl=50 time=23.527 ms
+
 Tools
 =====
 
