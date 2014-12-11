@@ -189,7 +189,7 @@ SetupNeutron: This sets up neutron with a router for external connectivity for y
 
 SwitchToQemu: KVM is not supported inside virtualbox, this script switches to qemu
 
-LaunchCirrosVM $1 :Launches a vm with the name $1
+LaunchCirrosVM $1 Launches a vm with the name $1
 
 DeleteNetwork:Runs throught some loops and removes all openstack networking, must be run on the compute node
 
