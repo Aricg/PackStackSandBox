@@ -163,6 +163,7 @@ Bridgemode:
 http:// compute: bridged_ip: from your vagtantfile.yml
 
 CirrosVM
+
 ssh into your machine and ping the outside world
 
     [root@compute vagrant]# source keystonerc_admin
