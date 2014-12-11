@@ -154,16 +154,14 @@ That's it everything should work now.
 Testing
 =======
 
+Dashboard
+
 Natmode:
-got to http://localhost:8080/dashboard/ to see your dashboard.
-
-
-
-
+http://localhost:8080/dashboard/ 
 Bridgemode:
+http:// compute: bridged_ip: from your vagtantfile.yml
 
-  Got to http:// compute: bridged_ip: from your vagtantfile.yml
-
+CirrosVM
 ssh into your machine and ping the outside world
 
     [root@compute vagrant]# source keystonerc_admin
