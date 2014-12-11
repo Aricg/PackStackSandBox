@@ -158,6 +158,7 @@ Dashboard
 
 Natmode:
 http://localhost:8080/dashboard/ 
+
 Bridgemode:
 http:// compute: bridged_ip: from your vagtantfile.yml
 
