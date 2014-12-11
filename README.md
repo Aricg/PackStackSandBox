@@ -162,7 +162,7 @@ http://localhost:8080/dashboard/
 Bridgemode:
 http:// compute: bridged_ip: from your vagtantfile.yml
 
-CirrosVM
+CirrosVM:
 
 ssh into your machine and ping the outside world
 
