@@ -191,7 +191,7 @@ SwitchToQemu: KVM is not supported inside virtualbox, this script switches to qe
 
 LaunchCirrosVM: Launches a vm with the name $1
 
-DeleteNetwork:Runs throught some loops and removes all openstack networking, must be run on the compute node
+DeleteNetwork: Runs throught some loops and removes all openstack networking, must be run on the compute node
 
 Trouble-shooting
 ================
