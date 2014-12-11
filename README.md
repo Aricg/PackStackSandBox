@@ -164,7 +164,7 @@ http:// compute: bridged_ip: from your vagtantfile.yml
 
 CirrosVM:
 
-ssh into your machine and ping the outside world
+ssh into the CirrosVM spawned by ./SetupComputeNode and ping the outside world
 
     [root@compute vagrant]# source keystonerc_admin
     [root@compute vagrant(keystone_admin)]# neutron floatingip-list
