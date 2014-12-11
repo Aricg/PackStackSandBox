@@ -240,7 +240,6 @@ Caveats
 ======================
 Vagrant reconfigures the network device eth1 on boot. 
 You will need to run /vagrant/SetupComputeNodeAfterReboot each time the compute node is rebooted.
-(/vagrant/SetupComputeNodeAfterReboot has not been tested for nat mode yet)
 
 
 Contribute!
