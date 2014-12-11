@@ -33,6 +33,8 @@ Nat networking will provide the gateway to the internet as well as connectivity 
 
 Setup Masquerade/Forwarding on your host to you vboxnet interface
 
+Linux:
+
 make sure these are set in /etc/sysctl.d
 
     net.ipv4.ip_forward = 1
@@ -49,6 +51,16 @@ In my example my hosts interface for internet connetiviy is docker0 (yours might
     iptables -A POSTROUTING -t nat -j MASQUERADE
 
 In this example we have set the vboxnet to  the 10.0.20.0/22 range.
+
+OSX:
+
+Don't have a mac, this is untested
+
+    /usr/sbin/natd -interface en0
+    /sbin/ipfw -f flush
+    /sbin/ipfw add divert natd all from any to any via en0
+    /sbin/ipfw add pass all from any to any
+    sudo sysctl -w net.inet.ip.forwarding=1
 
 Vagrant ssh into the compute and the controller node and set the default route to vboxnet0 rather than the nat device that vagrant sets at default
 
