@@ -12,10 +12,22 @@ fi
 if [[ -f "$(which parse_yaml)" ]] && [[ -f Vagrantfile.yml ]]; then
   eval $(parse_yaml Vagrantfile.yml)
 
+if [[ "$1" == "SetupNeutron" ]];
+then
+
+eval "cat <<EOF
+$(<conf/template."$1")
+EOF
+" 2> /dev/null > bin/SetupNeutron
+
+else
+
 eval "cat <<EOF
 $(<conf/template."$1")
 EOF
 " 2> /dev/null > ans.txt
+
+fi
 
 else
   echo "please run this from the /vagrant/ directory and ensure that paths to /vagrant/bin/ are set properly by .bashrc"
