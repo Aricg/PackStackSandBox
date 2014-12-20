@@ -1,12 +1,19 @@
 #!/bin/bash
+
 set -v 
+#Must be run on Network node due to ip netns portion
 if [[ $HOSTNAME != "compute" ]]; then
   echo "Must be run on network node"
   exit 1
 fi 
 
-#Must be run on Network node due to ip netns portion
-source /vagrant/keystonerc_admin 
+if [[ -f /vagrant/keystonerc_admin ]]; then
+  source /vagrant/keystonerc_admin 
+else
+  echo "keystonerc_admin not found, packstack has not been successfully run"
+  exit 1
+fi
+
 
 for port in $(neutron port-list -c id | egrep -v '\-\-|id' | awk '{print $2}'); do
 	neutron port-delete ${port}
@@ -22,7 +29,7 @@ subnetid=$(neutron router-port-list $routerid | grep subnet_id | awk -F'"' '{pri
 done
 
 for x in $(ip netns); do 
-ip netns del $x
+  ip netns del $x
 done
 
 for x in $(neutron net-list | grep [0-9] | awk '{print $2}'); do 

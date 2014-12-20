@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [[ $(whoami) != "root" ]] && [[ $HOSTNAME != "compute" ]]; 
+then
+  echo "This script must be run as root on the compute node"
+  exit 1
+fi
+
+if [[ -f "$(which parse_yaml)" ]] && [[ -f Vagrantfile.yml ]]; then
+  eval $(parse_yaml Vagrantfile.yml)
+  peip=${neutron_router_start%.*};
+  export network="$peip".0
+
+else
+    echo "please run this from the /vagrant/ directory and ensure that paths to /vagrant/bin/ are set properly by .bashrc"
+      exit 1
+fi
+
+
+set -v
+ifdown eth1
+yes | cp /vagrant/ifcfg-eth1 /etc/sysconfig/network-scripts/
+ifup eth1
+ip route del default
+ip route add default via "$gateway"
+route add -net $network netmask 255.255.255.0 gw $neutron_router_start
+

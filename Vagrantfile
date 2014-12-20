@@ -13,9 +13,6 @@ controller_private_ip = settings['controller']['private_ip']
 compute_bridged_ip = settings['compute']['bridged_ip']
 compute_private_ip = settings['compute']['private_ip']
 
-# This Builds the answerfile from the values in Vagrantfile.yml
-
-
 VAGRANTFILE_API_VERSION = "2"
  
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -35,15 +32,15 @@ config.vm.define "controller" do |controller|
           puts "nat mode = no " 
           controller.vm.network "public_network", :bridge => bridge, ip: controller_bridged_ip, :auto_config => "true", :netmask => netmask
           controller.vm.network "private_network", ip: controller_private_ip
-          controller.vm.provision :shell, :path => "prepare.sh", :args => gateway
-          system('./build_answerfile.bridge')
+          controller.vm.provision :shell, :path => "./bin/prepare.sh", :args => gateway
+          system('./bin/build_answerfile bridge')
 
           else
           puts "nat mode = yes " 
           controller.vm.network "private_network", ip: controller_private_ip, :netmask => "255.255.252.0"
           controller.vm.network :forwarded_port, host: 8080, guest: 80
-          controller.vm.provision "shell", path: "prepare.sh"
-          system('./build_answerfile.nat')
+          controller.vm.provision "shell", path: "./bin/prepare.sh", :args => gateway
+          system('./bin/build_answerfile nat')
           end
 
   #Example skeleton for using the puppet provider
@@ -78,10 +75,10 @@ config.vm.define "compute" do |compute|
         if nat_mode.nil? or nat_mode == 0
           compute.vm.network "public_network", :bridge => bridge, ip: compute_bridged_ip, :auto_config => "true", :netmask => netmask
           compute.vm.network "private_network", ip: compute_private_ip
-          compute.vm.provision :shell, :path => "prepare.sh", :args => gateway
+          compute.vm.provision :shell, :path => "./bin/prepare.sh", :args => gateway
         else 
           compute.vm.network "private_network", ip: compute_private_ip, :netmask => "255.255.252.0"
-          compute.vm.provision "shell", path: "prepare.sh"
+          compute.vm.provision "shell", path: "./bin/prepare.sh", :args => gateway
         end
 
   #Example skeleton for using the puppet provider

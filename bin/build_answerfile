@@ -1,0 +1,24 @@
+#!/bin/bash
+#This script replaces #placeholders in template."$1" with the values found in Vagrantfile.yml
+
+
+if [[ -z "$@" ]]; then
+  echo "This file is meant to be called during Vagrant up"
+  echo "Usage: $0 bridge or nat"
+  exit 1
+fi
+
+
+if [[ -f "$(which parse_yaml)" ]] && [[ -f Vagrantfile.yml ]]; then
+  eval $(parse_yaml Vagrantfile.yml)
+
+eval "cat <<EOF
+$(<conf/template."$1")
+EOF
+" 2> /dev/null > ans.txt
+
+else
+  echo "please run this from the /vagrant/ directory and ensure that paths to /vagrant/bin/ are set properly by .bashrc"
+  exit 1
+fi
+
