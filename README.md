@@ -143,19 +143,19 @@ ssh into the vagrant controller (password is vagrant)
 
     vagrant ssh controller
 
-run packstack (for nat mode complete steps below first) 
+run packstack 
 
     cd /vagrant
     sudo bash
     packstack  --answer-file=ans.txt && yes|cp /root/keystonerc_admin /vagrant
 
-the answerfile is generated from ans.template or ans.NAT.template when you run vagrant up. 
+the answerfile is generated from template.nat or template.bridge when you run vagrant up. 
 packstack should now prompt you for the root password of both nodes. The password is "vagrant"
 if packstack fails for some reason, just run it again. 
 
 Networking
 ==========
-To setup networking, and launch the cirros minimal VM you must wait for the above operations to complete. (packstack and copying the keystonerc_admin) Once those are done, vagrant ssh into the networking (compute node):
+To setup openstack's networking, and launch the cirros minimal VM you must wait for the above operations to complete. (packstack and copying the keystonerc_admin) Once those are done, vagrant ssh into the networking (compute node):
 
     vagrant ssh compute
     [vagrant@compute]# sudo bash
