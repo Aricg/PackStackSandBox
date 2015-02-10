@@ -9,8 +9,8 @@ if [[ -z "$@" ]]; then
 fi
 
 
-if [[ -f "$(which parse_yaml)" ]] && [[ -f Vagrantfile.yml ]]; then
-  eval $(parse_yaml Vagrantfile.yml)
+if [[ -f "$(which ./bin/parse_yaml)" ]] && [[ -f Vagrantfile.yml ]]; then
+  eval $(./bin/parse_yaml Vagrantfile.yml)
 
 if [[ "$1" == "SetupNeutron" ]];
 then

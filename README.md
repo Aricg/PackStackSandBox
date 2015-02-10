@@ -64,7 +64,7 @@ Don't have a mac, this is untested
 
 Vagrant ssh into the compute and the controller node and set the default route to vboxnet0 rather than the nat device that vagrant sets at default
 
-TODO automate this.
+This has been automated, leaving it as a note to self
 
     ip route del default
     ip route add default via 10.0.20.1 (the gateway set it your Vagrantfile.yml) dev eth1
