@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 config.vm.define "controller" do |controller|
   controller.vm.box = "controller"
   controller.vm.hostname = "controller"
-  controller.vm.box_url = "https://build.opnfv.org/releases/controller.box"
+  controller.vm.box_url = "https://build.opnfv.org/releases/PackStackSand.box"
 
     controller.vm.provider "virtualbox" do |v|
       v.customize ["modifyvm", :id, "--cpus", 1]
